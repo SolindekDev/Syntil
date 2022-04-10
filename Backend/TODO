@@ -1,0 +1,28 @@
+
+TODO List: ---------------------------------------------
+    - [X] Connect to database MongoDB
+        - [X] Inserting users
+        - [X] Instering posts
+    - [ ] Create account system
+        - [ ] Register
+        - [ ] Login
+        - [ ] Logout
+        - [ ] Delete account
+        - [ ] Edit account
+        - [ ] Following
+        - [ ] Get info about account by the username, id
+    - [ ] Create post system
+        - [ ] Add
+        - [ ] Delete
+        - [ ] Edit
+        - [ ] Get by id
+        - [ ] Like the post
+        - [ ] Comment the post
+    - [ ] Create a util API
+        - [ ] Choose random post
+        - [ ] Choose random account
+
+=================================================
+This list has been created on 10th of April 2022.
+=================================================
+
