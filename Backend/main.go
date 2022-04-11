@@ -13,7 +13,13 @@ var database *mongo.Database
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
-	r.POST("/api/1v/register", registerPost)
+	r.POST("/api/1v/account/register", registerPost)
+	r.POST("/api/1v/account/login", loginPost)
+	r.POST("/api/1v/account/delete", deletePost)
+	r.POST("/api/1v/account/update/:MODE", editPost)
+	r.POST("/api/1v/account/follow/:TOKEN/:PROFILE_ID", followPost)
+
+	r.GET("/", mainGet)
 
 	return r
 }

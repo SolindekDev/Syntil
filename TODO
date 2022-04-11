@@ -3,12 +3,11 @@ TODO List: ---------------------------------------------
     - [X] Connect to database MongoDB
         - [X] Inserting users
         - [X] Instering posts
-    - [ ] Create account system
-        - [ ] Register
-        - [ ] Login
-        - [ ] Logout
-        - [ ] Delete account
-        - [ ] Edit account
+    - [X] Create account system
+        - [X] Register
+        - [X] Login
+        - [X] Delete account
+        - [X] Edit account
         - [ ] Following
         - [ ] Get info about account by the username, id
     - [ ] Create post system
