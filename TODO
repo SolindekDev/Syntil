@@ -8,10 +8,10 @@ TODO List: ---------------------------------------------
         - [X] Login
         - [X] Delete account
         - [X] Edit account
-        - [ ] Following
-        - [ ] Get info about account by the username, id
-    - [ ] Create post system
-        - [ ] Add
+        - [X] Following
+        - [X] Get info about account by the username, id
+    - [X] Create post system
+        - [X] Add
         - [ ] Delete
         - [ ] Edit
         - [ ] Get by id

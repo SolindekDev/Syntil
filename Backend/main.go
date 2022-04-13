@@ -17,7 +17,11 @@ func setupRouter() *gin.Engine {
 	r.POST("/api/1v/account/login", loginPost)
 	r.POST("/api/1v/account/delete", deletePost)
 	r.POST("/api/1v/account/update/:MODE", editPost)
-	r.POST("/api/1v/account/follow/:TOKEN/:PROFILE_ID", followPost)
+	r.GET("/api/1v/account/follow/:TOKEN/:PROFILE_ID", followPost)
+	r.GET("/api/1v/account/find/id/:USER_ID", getUserInfoPostByID)
+	r.GET("/api/1v/account/find/token/:USER_TOKEN", getUserInfoPostByToken)
+
+	r.POST("/api/1v/post/create", createPostAPI)
 
 	r.GET("/", mainGet)
 

@@ -27,15 +27,110 @@ func loginPost(c *gin.Context) {
 	}
 }
 
+func getUserInfoPostByToken(c *gin.Context) {
+	token := c.Param("USER_TOKEN")
+
+	filter := bson.D{{"token",token}}
+	findUser := FindUser(database,filter)
+
+	if findUser.Token == token {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":"400",
+			"message":"User has found.",
+			"user": gin.H{
+				"username": findUser.Username,
+				"email": findUser.Email,
+				"password": findUser.Password,
+				"token": findUser.Token,
+				"id": findUser.ID,
+				"biographie": findUser.Biographie,
+				"avatarurl": findUser.AvatarURL,
+				"timestamp": findUser.Timestamp,
+				"followers": findUser.Followers,
+			},
+		})
+		return
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Failed while searching for user with this id." })
+		return
+	}
+}
+
+func getUserInfoPostByID(c *gin.Context) {
+	id := c.Param("USER_ID")
+
+	filter := bson.D{{"id",id}}
+	findUser := FindUser(database,filter)
+
+	if findUser.ID == id {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":"400",
+			"message":"User has found.",
+			"user": gin.H{
+				"username": findUser.Username,
+				"id": findUser.ID,
+				"biographie": findUser.Biographie,
+				"avatarurl": findUser.AvatarURL,
+				"timestamp": findUser.Timestamp,
+				"followers": findUser.Followers,
+			},
+		})
+		return
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Failed while searching for user with this id." })
+		return
+	}
+}
+
 func followPost(c *gin.Context) {
 	token := c.Param("TOKEN")
-	profile_id:= c.Param("PROFILE_ID")
+	profileID := c.Param("PROFILE_ID")
 
 	filter := bson.D{{"token",token}}
 	findLoginUser := FindUser(database, filter)
 
 	if findLoginUser.Token == token {
+		if findLoginUser.ID == profileID {
+			c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"You can't give yourself a follow" })
+			return
+		}
 
+		filter = bson.D{{"id",profileID}}
+		findProfile := FindUser(database, filter)
+
+		if findProfile.ID == profileID {
+			alreadyFollow := false
+			for i := 0; i < len(findProfile.Followers); i++ {
+				if findProfile.Followers[i].ID == findLoginUser.ID {
+					alreadyFollow = true
+				}
+			}
+
+			if alreadyFollow == true {
+				database.Collection("users").FindOneAndUpdate(context.TODO(), filter, bson.M{"$pull":bson.M{"followers":bson.M{"id":findLoginUser.ID}}})
+				c.JSON(http.StatusOK, gin.H{"status": "200", "message": "Successfully unfollowed"})
+				return
+			} else {
+				database.Collection("users").FindOneAndUpdate(context.TODO(), filter, bson.M{
+					"$push": bson.M{
+						"followers": bson.M {
+							"username": findLoginUser.Username,
+							"id": findLoginUser.ID,
+							"biographie": findLoginUser.Biographie,
+							"avatarurl": findLoginUser.AvatarURL,
+						},
+					},
+				})
+				c.JSON(http.StatusOK, gin.H{"status": "200", "message": "Successfully followed"})
+				return
+			}
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Can't find user with this id" })
+			return
+		}
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Accout with that token has not been founded" })
+		return
 	}
 }
 
@@ -73,7 +168,7 @@ func editPost(c *gin.Context) {
 			return
 		}
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Accout has not been founded" })
+		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Account has not been founded" })
 		return
 	}
 }
@@ -106,10 +201,7 @@ func registerPost(c *gin.Context) {
 	password, passwordExists := c.GetPostForm("password")
 
 	if emailExists != true { c.JSON(http.StatusBadRequest, gin.H{ "status": "400", "message": "Email not given!" }); return
-	} else if usernameExists != true { c.JSON(http.StatusBadRequest, gin.H{
-		"status":  "400",
-		"message": "Username not given!",
-	}); return
+	} else if usernameExists != true { c.JSON(http.StatusBadRequest, gin.H{"status":  "400", "message": "Username not given!",}); return
 	} else if passwordExists != true { c.JSON(http.StatusBadRequest, gin.H{"status": "400", "message": "Password not given!" }); return }
 
 	if len(email) < 6 { c.JSON(http.StatusBadRequest, gin.H{ "status": "400", "message": "Email is too short! Minimum 6 characters." }); return }
@@ -132,7 +224,7 @@ func registerPost(c *gin.Context) {
 
 	if findThatSameUser.Username == username { c.JSON(http.StatusBadRequest, gin.H{ "status": "400", "message": "Username is already used"}); return }
 
-	var followers []UserModel
+	followers := []UserModel{}
 	id := generateID()
 	token := generateToken()
 	InsertUser(
