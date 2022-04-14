@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func loginPost(c *gin.Context) {
+func accountLoginPost(c *gin.Context) {
 	email, emailExists := c.GetPostForm("email")
 	password, passwordExists := c.GetPostForm("password")
 
@@ -27,7 +27,7 @@ func loginPost(c *gin.Context) {
 	}
 }
 
-func getUserInfoPostByToken(c *gin.Context) {
+func accountGetUserInfoPostByToken(c *gin.Context) {
 	token := c.Param("USER_TOKEN")
 
 	filter := bson.D{{"token",token}}
@@ -56,7 +56,7 @@ func getUserInfoPostByToken(c *gin.Context) {
 	}
 }
 
-func getUserInfoPostByID(c *gin.Context) {
+func accountGetUserInfoPostByID(c *gin.Context) {
 	id := c.Param("USER_ID")
 
 	filter := bson.D{{"id",id}}
@@ -82,7 +82,7 @@ func getUserInfoPostByID(c *gin.Context) {
 	}
 }
 
-func followPost(c *gin.Context) {
+func accountFollowPost(c *gin.Context) {
 	token := c.Param("TOKEN")
 	profileID := c.Param("PROFILE_ID")
 
@@ -129,12 +129,12 @@ func followPost(c *gin.Context) {
 			return
 		}
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Accout with that token has not been founded" })
+		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Account with that token has not been founded" })
 		return
 	}
 }
 
-func editPost(c *gin.Context) {
+func accountEditPost(c *gin.Context) {
 	email, emailExists := c.GetPostForm("email")
 	token, tokenExists := c.GetPostForm("token")
 	password, passwordExists := c.GetPostForm("password")
@@ -173,7 +173,7 @@ func editPost(c *gin.Context) {
 	}
 }
 
-func deletePost(c *gin.Context) {
+func accountDeletePost(c *gin.Context) {
 	email, emailExists := c.GetPostForm("email")
 	token, tokenExists := c.GetPostForm("token")
 	password, passwordExists := c.GetPostForm("password")
@@ -190,12 +190,12 @@ func deletePost(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{ "status":"200", "message":"Account has been deleted" })
 		return
 	} else {
-		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Accout has not been founded and as well deleted" })
+		c.JSON(http.StatusBadRequest, gin.H{ "status":"400", "message":"Account has not been founded and as well deleted" })
 		return
 	}
 }
 
-func registerPost(c *gin.Context) {
+func accountRegisterPost(c *gin.Context) {
 	email, emailExists := c.GetPostForm("email")
 	username, usernameExists := c.GetPostForm("username")
 	password, passwordExists := c.GetPostForm("password")

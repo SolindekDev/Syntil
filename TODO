@@ -12,11 +12,12 @@ TODO List: ---------------------------------------------
         - [X] Get info about account by the username, id
     - [X] Create post system
         - [X] Add
-        - [ ] Delete
-        - [ ] Edit
-        - [ ] Get by id
-        - [ ] Like the post
-        - [ ] Comment the post
+        - [X] Delete
+        - [X] Edit
+        - [X] Get by id
+        - [X] Like the post
+        - [X] Get all posts of user
+        - In future!! ->> [ ] Comment the post
     - [ ] Create a util API
         - [ ] Choose random post
         - [ ] Choose random account

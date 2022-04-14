@@ -13,15 +13,20 @@ var database *mongo.Database
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
-	r.POST("/api/1v/account/register", registerPost)
-	r.POST("/api/1v/account/login", loginPost)
-	r.POST("/api/1v/account/delete", deletePost)
-	r.POST("/api/1v/account/update/:MODE", editPost)
-	r.GET("/api/1v/account/follow/:TOKEN/:PROFILE_ID", followPost)
-	r.GET("/api/1v/account/find/id/:USER_ID", getUserInfoPostByID)
-	r.GET("/api/1v/account/find/token/:USER_TOKEN", getUserInfoPostByToken)
+	r.POST("/api/1v/account/register", accountRegisterPost)
+	r.POST("/api/1v/account/login", accountLoginPost)
+	r.POST("/api/1v/account/delete", accountDeletePost)
+	r.POST("/api/1v/account/update/:MODE", accountEditPost)
+	r.GET("/api/1v/account/follow/:TOKEN/:PROFILE_ID", accountFollowPost)
+	r.GET("/api/1v/account/find/id/:USER_ID", accountGetUserInfoPostByID)
+	r.GET("/api/1v/account/find/token/:USER_TOKEN", accountGetUserInfoPostByToken)
 
-	r.POST("/api/1v/post/create", createPostAPI)
+	r.POST("/api/1v/post/create", postCreatePost)
+	r.POST("/api/1v/post/delete", postDeletePost)
+	r.POST("/api/1v/post/edit", postEditPost)
+	r.GET("/api/1v/post/find/id/:POST_ID", postGetPostInfoGetByID)
+	r.GET("/api/1v/post/like/:TOKEN/:POST_ID", postLikeGet)
+	r.GET("/api/1v/post/allposts/:USER_ID/", allPostsOfUserGet)
 
 	r.GET("/", mainGet)
 
